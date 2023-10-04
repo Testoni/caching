@@ -3,6 +3,7 @@ package com.example.caching;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +56,11 @@ class ProductService {
         System.out.println("Searching product...");
         simulateLatency();
         return products.get(id);
+    }
+
+    @CacheEvict(value = "products", allEntries = true)
+    void addProduct(Product product) {
+        products.put((products.size() + 1L), product);
     }
 
     private void simulateLatency() {
